@@ -1,0 +1,29 @@
+{
+  "name": "wc2014",
+  "version": "0.0.1",
+  "description": "World Cup 2014",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jason Jung",
+  "license": "ISC",
+  "dependencies": {
+    "co-render": "0.0.1",
+    "express": "^4.4.3",
+    "handlebars": "^2.0.0-alpha.4",
+    "json-query": "^0.4.0",
+    "koa": "^0.8.0",
+    "koa-body": "^0.1.0",
+    "koa-body-parser": "^1.1.0",
+    "koa-router": "^3.1.4",
+    "koa-session": "^2.0.0",
+    "lodash": "^2.4.1",
+    "moment": "^2.7.0",
+    "mongoose": "^3.8.12",
+    "socket.io": "^1.0.6",
+    "spahql": "^0.7.6",
+    "thunkify": "^2.1.2",
+    "yql": "^0.4.8"
+  }
+}

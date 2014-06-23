@@ -1,0 +1,110 @@
+body {
+  margin: 1em 5em;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+header h1 {
+  background: url(logo.png) no-repeat left center;
+  padding-left: 100px;
+  line-height: 120px;
+  font-size: 2em;
+  color: #1F4674;
+}
+
+ul, li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.match-date {
+  font-size: 1.5em;
+  color: white;
+  background: #1F4674;
+  line-height: 2em;
+  margin: 1em -2em;
+  padding: 0 2em;
+}
+
+.match-list {
+
+}
+
+.match-list > li {
+  margin-bottom: 2em;
+}
+
+.match .score {
+  width: 3em;
+  float: right;
+}
+.match .score:after {
+  clear: both;
+}
+.match .group {
+  font-size: 1.3em;
+  line-height: 2.2em;
+  font-weight: bold;
+}
+
+.match .flag {
+  width: 50px;
+}
+
+.match .team {
+  width: 300px;
+  padding: 0.6em;
+  margin: -0.4em;
+}
+
+.match .team-one {
+  background: #eee;
+}
+
+.match .team-two {
+  background: #e1e1e1;
+}
+
+.match .team-name {
+  margin-left: 1em;
+}
+.match button {
+  margin: 1.5em 0;
+}
+
+.match form {
+  float: left
+}
+
+.match {
+  overflow: hidden;
+}
+.match .scores {
+  float: left;
+  margin-left: 5em;
+}
+
+.match .scores:after {
+  clear: both;
+}
+
+.match .scores {
+  margin-top: 3em;
+  overflow: hidden;
+}
+
+.match .scores li {
+  overflow: hidden;
+}
+
+.match .scores .user-name {
+  font-weight: bold;
+  margin-right: 3em;
+  display: block;
+  float: left;
+  width: 60px;
+}
+
+.match .scores .user-score {
+  display: block;
+  float: left;
+}
