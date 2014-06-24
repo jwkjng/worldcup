@@ -42,13 +42,13 @@
                 <img class="flag" src="http://img.fifa.com/images/flags/4/{{this.home_team.code}}.png" />
                 <span class="team-name">{{this.home_team.country}}</span>
                 <span class="actual-score"></span>
-                <input type="number" min="0" max="99" class="score" maxlength="2" name="scoreA">
+                <input type="number" min="0" max="99" class="score" maxlength="2" name="scoreA" value="0">
               </div>
               <div class="team-two team">
                 <img class="flag"  src="http://img.fifa.com/images/flags/4/{{this.away_team.code}}.png" />
                 <span class="team-name">{{this.away_team.country}}</span>
                 <span class="actual-score"></span>
-                <input type="number" min="0" max="99" class="score" maxlength="2" name="scoreB">
+                <input type="number" min="0" max="99" class="score" maxlength="2" name="scoreB" value="0">
               </div>
               <button class="btn btn-default" type="submit">Predict</button>
               <div class="match-score"></div>
