@@ -42,11 +42,14 @@ var initSocket = function () {
 
 var bindEvents = function () {
   $('.match-list .match').delegate('button', 'click', function (e) {
+    var $button = $(this);
     var $match = $(this).closest('.match');
     var $form = $(this).closest('form');
 
     $.post('/score', $form.serialize(), function (data) {
       socket.emit('score:added', data);
+      $button.css('visibility', 'hidden');
+      $match.find('.score').hide();
     });
     e.preventDefault();
   });
@@ -145,6 +148,8 @@ var getUserScore = function ($scores, data) {
     <span class="user-score"></span>
   </li>
   */
+  var $match = $scores.closest('.match');
+  var username = $('#username').val();
   for (var i = 0; i < data.length; i++) {
     var sc = data[i];
     var name = $('<span class="user-name">' + sc.name + '</span>');
@@ -153,6 +158,11 @@ var getUserScore = function ($scores, data) {
     li.append(name);
     li.append(score);
     $scores.append(li);
+
+    if (username == sc.name) {
+      $match.find('button').css('visibility', 'hidden');
+      $match.find('.score').hide();
+    }
   }
 };
 

@@ -113,9 +113,10 @@ app.get('/cup', function *(next) {
   if (!this.session.user) {
     this.redirect('/');
   }
+  var user = this.session.user;
   var context, pageOptions;
   var pagePath = path.join(__dirname, 'cup.html');
-  var momentDate = moment();//moment('2014-06-22');
+  var momentDate = moment();//moment('2014-06-24');
   var date = momentDate.format('YYYYMMDD');
   var options = {
     // date: moment().format("YYYYMMDD")
@@ -127,6 +128,7 @@ app.get('/cup', function *(next) {
 
   if (!data) {
     context = {
+      user: user,
       data: {},
       matchDate: moment().format('MMMM DD YYYY')
     };
@@ -149,6 +151,7 @@ app.get('/cup', function *(next) {
   }
 
   context = {
+    user: user,
     data: matches,
     matchDate: momentDate.format('MMMM DD YYYY')
   };
