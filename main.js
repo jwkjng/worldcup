@@ -15,12 +15,28 @@ var init = function () {
     var matchid = matchids[i];
     updateUserScores({matchid:matchid});
   }
+
+  // update every 5 min
+  setInterval(function () {
+    updateScores();
+  }, 5 * 60 * 1000);
 };
 
 var initSocket = function () {
   socket = io();
   socket.on('score:added', function (score) {
     updateUserScores(score);
+  });
+
+  socket.on('scores:update', function (data) {
+    if (data.length > 0) {
+      var match = data[0];
+      var matchid = match.match_number;
+      var home = (typeof match.home_team.goals === 'undefined') ? null : match.home_team.goals;
+      var away = (typeof match.away_team.goals === 'undefined') ? null : match.away_team.goals;
+
+      updateScore(matchid, home, away, match.status === 'completed');
+    }
   });
 };
 
@@ -34,6 +50,25 @@ var bindEvents = function () {
     });
     e.preventDefault();
   });
+};
+
+var poll = function () {
+  var matchids = $('.match-list .match').map(function () {
+    return $(this).attr('data-id');
+  }).get();
+
+  var date = $('.match-date').text();
+
+  $.post('/poll', {
+    matchids: matchids,
+    date: date
+  }, function (data) {
+
+  });
+};
+
+var updateAll = function () {
+  updateScores();
 };
 
 var updateScores = function () {

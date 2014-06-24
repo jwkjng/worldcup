@@ -160,20 +160,17 @@ app.get('/cup', function *(next) {
   this.body = yield render(pagePath, pageOptions);
 });
 
-app.get('/poll', function *(next) {
-  var options = {
-    date: moment().format("YYYYMMDD")
-  };
+app.post('/poll', function *(next) {
+  var matchids = this.request.body.matchids;
+  var date = this.request.body.date;
 
-  var data = yield scrapeDataThunk(options);
-  data = data.div;
-  data.splice(0, 1);
+  for (var i = 0; i < matchids.length; i++) {
+    var matchid = matchids[i];
+    var result = yield request('/scores/' + matchid + '/' + date);
+    io.emit('scores:update', JSON.parse(result.body));
+  }
 
-  var re = /\/worldcup\/matches\/round=\d+\/match=(\d+)\/[^"]*/ig;
-  data = JSON.stringify(data).replace(re, '$1');
-  data = JSON.parse(data);
-
-  this.body = data;
+  yield next;
 });
 
 app.get('/scores/:matchid/:date', function *(next) {
@@ -244,6 +241,9 @@ if (!module.parent) {
   io.on('connection', function (socket) {
     socket.on('score:added', function (score) {
       io.emit('score:added', score);
+    });
+    socket.on('scores:update', function (data) {
+      io.emit('scores:update', data);
     });
   });
 }
