@@ -52,14 +52,39 @@ var getScore = function (matchid) {
   var uri = '/scores/' + matchid + '/'  + date;
 
   $.get(uri, function (data) {
-    if (data.div[2].div[2].div.div.length > 1) {
-      updateScore(matchid, data.div[2].div[2].div.div[2].span.content);
+    if (data.length > 0) {
+      var match = data[0];
+      var home = (typeof match.home_team.goals === 'undefined') ? null : match.home_team.goals;
+      var away = (typeof match.away_team.goals === 'undefined') ? null : match.away_team.goals;
+
+      updateScore(matchid, home, away, match.status === 'completed');
     }
   });
 };
 
-var updateScore = function (matchid, score) {
-  $("[data-id=" + matchid + "]").find('.match-score').html(score);
+var updateScore = function (matchid, home, away, finished) {
+  var $match = $("[data-id=" + matchid + "]");
+  var $home = $match.find('.team-one');
+  var $away = $match.find('.team-two');
+
+  if (home !== null) {
+    $home.find('.actual-score').html(home);
+  }
+
+  if (away !== null) {
+    $away.find('.actual-score').html(away);
+  }
+
+  if (finished) {
+    $home.find('.score').hide()
+    $away.find('.score').hide();
+    $match.find('button').css('visibility', 'hidden');
+    if (home > away) {
+      $home.addClass('winner');
+    } else if (home < away) {
+      $away.addClass('winner');
+    }
+  }
 };
 
 var updateUserScores = (function () {
@@ -95,5 +120,5 @@ var getUserScore = function ($scores, data) {
 };
 
 var beginScoreLoop = function () {
-  
+
 };

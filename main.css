@@ -108,3 +108,14 @@ ul, li {
   display: block;
   float: left;
 }
+
+.match .actual-score {
+  font-weight: bold;
+  margin-left: 1em;
+}
+
+.match .winner {
+  background: #3D3D3D;
+  color: white;
+  font-weight: bold;
+}

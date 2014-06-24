@@ -28,7 +28,7 @@
         </div>
         <ul class="match-list">
           {{#each data}}
-          <li class="match" data-id="{{this.div.a.href}}">
+          <li class="match" data-id="{{this.match_number}}">
             <form method="post" action="/score">
               <input type="hidden" name="matchid" value="{{this.match_number}}">
               <input type="hidden" name="date" value="{{../matchDate}}">
@@ -36,11 +36,13 @@
               <div class="team-one team">
                 <img class="flag" src="http://img.fifa.com/images/flags/4/{{this.home_team.code}}.png" />
                 <span class="team-name">{{this.home_team.country}}</span>
+                <span class="actual-score"></span>
                 <input type="number" min="0" max="99" class="score" maxlength="2" name="scoreA">
               </div>
               <div class="team-two team">
                 <img class="flag"  src="http://img.fifa.com/images/flags/4/{{this.away_team.code}}.png" />
                 <span class="team-name">{{this.away_team.country}}</span>
+                <span class="actual-score"></span>
                 <input type="number" min="0" max="99" class="score" maxlength="2" name="scoreB">
               </div>
               <button class="btn btn-default" type="submit">Predict</button>

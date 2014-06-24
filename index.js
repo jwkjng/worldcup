@@ -139,11 +139,11 @@ app.get('/cup', function *(next) {
     return;
   }
 
-  var matches = [];console.log(data.length);
+  var matches = [];
   for (var i = 0; i < data.length; i++) {
     var match = data[i];
     var matchdate = moment(match.datetime);
-    if (momentDate.diff(matchdate, 'days') == 0) {
+    if (momentDate.format('YYYYMMDD') == matchdate.format('YYYYMMDD')) {
       matches.push(match);
     }
   }
@@ -178,24 +178,23 @@ app.get('/poll', function *(next) {
 
 app.get('/scores/:matchid/:date', function *(next) {
   var matchid = this.params.matchid;
-  var date = moment(this.params.date).format('YYYYMMDD');
+  var date = moment(this.params.date);
   var pagePath = path.join(__dirname, 'cup.html');
 
-  var options = {
-    date: date
-  };
+  var data = yield getData();
 
-  var data = yield scrapeDataThunk(options);
-  data = data.div;
-  data.splice(0, 1);
+  var matches = [];
+  for (var i = 0; i < data.length; i++) {
+    var match = data[i];
+    var matchdate = moment(match.datetime);
 
-  var re = /\/worldcup\/matches\/round=\d+\/match=(\d+)\/[^"]*/ig;
-  data = JSON.stringify(data).replace(re, '$1');
-  data = JSON.parse(data);
+    if (date.format('YYYYMMDD') == matchdate.format('YYYYMMDD') &&
+        match.match_number == matchid) {
+      matches.push(match);
+    }
+  }
 
-  var db = ql.db(data);
-  data = db.select("//div[/a/href == '" + matchid + "']");
-  this.body = data.value();
+  this.body = matches;
 });
 
 app.post('/score', function *(next) {
