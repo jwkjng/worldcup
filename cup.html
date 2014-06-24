@@ -24,8 +24,7 @@
     </header>
     <div>
       <div class="matches">
-        <div class="match-date">{{matchDate}}
-        </div>
+        <div class="match-date">{{matchDate}}</div>
         <ul class="match-list">
           {{#each data}}
           <li class="match" data-id="{{this.match_number}}">
@@ -61,6 +60,15 @@
             <span>name</span>
             <span>90%</span>
           </li>
+        </ul>
+      </div>
+      <div class="point-system">
+        <h4>Point Calculation Rules</h4>
+        <ul>
+          <li>1. Exact score macth: 20 points</li>
+          <li>2. One side score match: 8 points</li>
+          <li>3. Winning side + goal difference match: 5 points</li>
+          <li>4. Winning side match: 2 points</li>
         </ul>
       </div>
     </div>

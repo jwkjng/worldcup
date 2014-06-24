@@ -119,3 +119,13 @@ ul, li {
   color: white;
   font-weight: bold;
 }
+.point-system {
+  margin: 1.8em 0;
+}
+
+.point-system h4 {
+  border-bottom: solid 1px #1F4674;
+}
+.point-system ul {
+  color: #6d6d6d;
+}
