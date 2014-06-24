@@ -53,6 +53,10 @@ var bindEvents = function () {
     });
     e.preventDefault();
   });
+
+  $('.match-date #prev, .match-date #next').click(function () {
+    location.href = "/cup/" + $(this).attr('data-date');
+  });
 };
 
 var poll = function () {
@@ -60,7 +64,7 @@ var poll = function () {
     return $(this).attr('data-id');
   }).get();
 
-  var date = $('.match-date').text();
+  var date = $('.match-date span').text();
 
   $.post('/poll', {
     matchids: matchids,
@@ -86,7 +90,7 @@ var updateScores = function () {
 };
 
 var getScore = function (matchid) {
-  var date = $('.match-date').text();
+  var date = $('.match-date span').text();
   var uri = '/scores/' + matchid + '/'  + date;
 
   $.get(uri, function (data) {

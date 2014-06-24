@@ -16,6 +16,10 @@ ul, li {
   margin: 0;
   list-style: none;
 }
+
+a:hover {
+  text-decoration: none;
+}
 .match-date {
   font-size: 1.5em;
   color: white;
@@ -51,7 +55,7 @@ ul, li {
 }
 
 .match .team {
-  width: 300px;
+  width: 360px;
   padding: 0.6em;
   margin: -0.4em;
 }
@@ -135,4 +139,13 @@ ul, li {
   background:#3D3D3D;
   text-transform: uppercase;
   padding: 0.5em;
+}
+.matches .match-date a {
+  cursor: pointer;
+  font-size: 0.8em;
+  margin-right: 1.5em;
+}
+
+.matches .match-date span {
+  margin-right: 3em;
 }

@@ -153,7 +153,65 @@ app.get('/cup', function *(next) {
   context = {
     user: user,
     data: matches,
-    matchDate: momentDate.format('MMMM DD YYYY')
+    matchDate: momentDate.format('MMMM DD YYYY'),
+    prevDate: momentDate.subtract('days', 1).format('MMMM DD YYYY'),
+    nextDate: momentDate.add('days', 2).format('MMMM DD YYYY')
+  };
+  pageOptions = _.extend(context, {
+    engine: 'handlebars'
+  });
+
+  // this.body = matches;
+  this.body = yield render(pagePath, pageOptions);
+});
+
+app.get('/cup/:date', function *(next) {
+  if (!this.session.user) {
+    this.redirect('/');
+  }
+  var user = this.session.user;
+  var context, pageOptions;
+  var pagePath = path.join(__dirname, 'cup.html');
+  var momentDate = !!this.params.date ? moment(this.params.date) : moment();//moment('2014-06-24');
+  var date = momentDate.format('YYYYMMDD');
+  var options = {
+    // date: moment().format("YYYYMMDD")
+    date: date
+  };
+
+  var data = yield getData();
+  // var data = yield scrapeDataThunk(options);
+
+  if (!data) {
+    context = {
+      user: user,
+      data: {},
+      matchDate: moment().format('MMMM DD YYYY')
+    };
+    pageOptions = _.extend(context, {
+      engine: 'handlebars'
+    });
+
+    // this.body = data;
+    this.body = yield render(pagePath, pageOptions);
+    return;
+  }
+
+  var matches = [];
+  for (var i = 0; i < data.length; i++) {
+    var match = data[i];
+    var matchdate = moment(match.datetime);
+    if (momentDate.format('YYYYMMDD') == matchdate.format('YYYYMMDD')) {
+      matches.push(match);
+    }
+  }
+
+  context = {
+    user: user,
+    data: matches,
+    matchDate: momentDate.format('MMMM DD YYYY'),
+    prevDate: momentDate.subtract('days', 1).format('MMMM DD YYYY'),
+    nextDate: momentDate.add('days', 2).format('MMMM DD YYYY')
   };
   pageOptions = _.extend(context, {
     engine: 'handlebars'
@@ -179,17 +237,15 @@ app.post('/poll', function *(next) {
 app.get('/scores/:matchid/:date', function *(next) {
   var matchid = this.params.matchid;
   var date = moment(this.params.date);
-  var pagePath = path.join(__dirname, 'cup.html');
-
   var data = yield getData();
-
   var matches = [];
+
   for (var i = 0; i < data.length; i++) {
     var match = data[i];
     var matchdate = moment(match.datetime);
 
     if (date.format('YYYYMMDD') == matchdate.format('YYYYMMDD') &&
-        match.match_number == matchid) {
+      match.match_number == matchid) {
       matches.push(match);
     }
   }

@@ -10,13 +10,14 @@
     <!-- Optional theme -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 
-    <link rel="stylesheet" href="main.css" >
+    <link rel="stylesheet" href="/main.css" >
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/moment.min.js"></script>
   </head>
   <body>
     <header>
@@ -25,7 +26,11 @@
     <div>
       <div class="matches">
         <input type="hidden" id="username" value={{user}} />
-        <div class="match-date">{{matchDate}}</div>
+        <div class="match-date">
+          <span>{{matchDate}}</span>
+          <a id="prev" data-date="{{prevDate}}">&#9664; {{prevDate}}</a>
+          <a id="next" data-date="{{nextDate}}">{{nextDate}} &#9654;</a>
+        </div>
         <ul class="match-list">
           {{#each data}}
           <li class="match" data-id="{{this.match_number}}">
@@ -74,6 +79,6 @@
       </div>
     </div>
 
-    <script src="main.js" /></script>
+    <script src="/main.js" /></script>
   </body>
 </html>
