@@ -17,7 +17,7 @@ var koa = require('koa'),
     moment = require('moment'),
     scores = require('./scores'),
     request = require('co-request'),
-    USERS = ['jason','jeff','chris','charles','jorgen'],
+    USERS = ['jason','jeff','chris','charles','jorgen','allen'],
     httpServer, io;
 
 var streamFile = function *(next) {
