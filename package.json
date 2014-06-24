@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "co-render": "0.0.1",
+    "co-request": "^0.2.0",
     "express": "^4.4.3",
     "handlebars": "^2.0.0-alpha.4",
     "json-query": "^0.4.0",

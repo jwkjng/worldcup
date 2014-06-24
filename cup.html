@@ -30,18 +30,18 @@
           {{#each data}}
           <li class="match" data-id="{{this.div.a.href}}">
             <form method="post" action="/score">
-              <input type="hidden" name="matchid" value="{{this.div.a.href}}">
+              <input type="hidden" name="matchid" value="{{this.match_number}}">
               <input type="hidden" name="date" value="{{../matchDate}}">
-              <div class="group">{{this.div.div.[0].div.[3].p}}</div>
+              <div class="group">{{this.location}}</div>
               <div class="team-one team">
-                <img class="flag" src="{{this.div.div.[2].div.[0].div.[0].span.img.src}}" />
-                <span class="team-name">{{this.div.div.[2].div.[0].div.[1].span.[0].content}}</span>
-                <input type="number" class="score" maxlength="2" name="scoreA">
+                <img class="flag" src="http://img.fifa.com/images/flags/4/{{this.home_team.code}}.png" />
+                <span class="team-name">{{this.home_team.country}}</span>
+                <input type="number" min="0" max="99" class="score" maxlength="2" name="scoreA">
               </div>
               <div class="team-two team">
-                <img class="flag"  src="{{this.div.div.[2].div.[1].div.[0].span.img.src}}" />
-                <span class="team-name">{{this.div.div.[2].div.[1].div.[1].span.[0].content}}</span>
-                <input type="number" class="score" maxlength="2" name="scoreB">
+                <img class="flag"  src="http://img.fifa.com/images/flags/4/{{this.away_team.code}}.png" />
+                <span class="team-name">{{this.away_team.country}}</span>
+                <input type="number" min="0" max="99" class="score" maxlength="2" name="scoreB">
               </div>
               <button class="btn btn-default" type="submit">Predict</button>
               <div class="match-score"></div>

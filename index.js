@@ -16,6 +16,7 @@ var koa = require('koa'),
     render = require('co-render'),
     moment = require('moment'),
     scores = require('./scores'),
+    request = require('co-request'),
     USERS = ['jason','jeff','chris','charles','jorgen'],
     httpServer, io;
 
@@ -80,6 +81,12 @@ var scrapeData = function (options, callback) {
   });
 };
 
+var getData = function *() {
+  var result = yield request('http://worldcup.sfg.io/matches');
+
+  return JSON.parse(result.body);
+};
+
 var scrapeDataThunk = thunkify(scrapeData);
 
 // try GET /app.js
@@ -115,7 +122,8 @@ app.get('/cup', function *(next) {
     date: date
   };
 
-  var data = yield scrapeDataThunk(options);
+  var data = yield getData();
+  // var data = yield scrapeDataThunk(options);
 
   if (!data) {
     context = {
@@ -131,22 +139,24 @@ app.get('/cup', function *(next) {
     return;
   }
 
-  data = data.div;
-  data.splice(0, 1);
-
-  var re = /\/worldcup\/matches\/round=\d+\/match=(\d+)\/[^"]*/ig;
-  data = JSON.stringify(data).replace(re, '$1');
-  data = JSON.parse(data);
+  var matches = [];console.log(data.length);
+  for (var i = 0; i < data.length; i++) {
+    var match = data[i];
+    var matchdate = moment(match.datetime);
+    if (momentDate.diff(matchdate, 'days') == 0) {
+      matches.push(match);
+    }
+  }
 
   context = {
-    data: data,
+    data: matches,
     matchDate: momentDate.format('MMMM DD YYYY')
   };
   pageOptions = _.extend(context, {
     engine: 'handlebars'
   });
 
-  // this.body = data;
+  // this.body = matches;
   this.body = yield render(pagePath, pageOptions);
 });
 
