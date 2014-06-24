@@ -129,3 +129,10 @@ ul, li {
 .point-system ul {
   color: #6d6d6d;
 }
+.match .user-winner {
+  font-weight: bold;
+  color: white;
+  background:#3D3D3D;
+  text-transform: uppercase;
+  padding: 0.5em;
+}

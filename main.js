@@ -119,6 +119,8 @@ var updateScore = function (matchid, home, away, finished) {
     } else if (home < away) {
       $away.addClass('winner');
     }
+
+    highlightWinners(home, away, $match);
   }
 };
 
@@ -154,6 +156,17 @@ var getUserScore = function ($scores, data) {
   }
 };
 
-var beginScoreLoop = function () {
+var highlightWinners = function(home, away, $match) {
+  var $scores = $match.find('.scores');
+  var $scoreMatches = $scores.find('.user-score');
+  $scoreMatches.each(function () {
+    var score = $(this).text();
+    var scoreArr = score.split(':');
+    var userHome = scoreArr[0];
+    var userAway = scoreArr[1];
 
+    if (home == userHome && away == userAway) {
+      $(this).parent().addClass('user-winner');
+    }
+  });
 };
