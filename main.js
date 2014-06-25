@@ -128,6 +128,7 @@ var updateScore = function (matchid, home, away, finished) {
     }
 
     highlightWinners(home, away, $match);
+    updateUserPoints(matchid);
   }
 };
 
@@ -141,6 +142,7 @@ var updateUserScores = (function () {
     $scores.empty();
     $.get(url, function (data) {
       getUserScore($scores, data);
+      updateUserPoints(matchid);
     });
   };
 })();
@@ -158,9 +160,11 @@ var getUserScore = function ($scores, data) {
     var sc = data[i];
     var name = $('<span class="user-name">' + sc.name + '</span>');
     var score = $('<span class="user-score">' + sc.scoreA + ':' + sc.scoreB + '</span>');
-    var li = $('<li></li>');
+    var points = $('<span class="user-points"></span>');
+    var li = $('<li data-id="' + sc.name + '"></li>');
     li.append(name);
     li.append(score);
+    li.append(points);
     $scores.append(li);
 
     if (username == sc.name) {
@@ -183,4 +187,22 @@ var highlightWinners = function(home, away, $match) {
       $(this).parent().addClass('user-winner');
     }
   });
+};
+
+var updateUserPoints = function (matchid) {
+  var url = '/points/' + matchid;
+  $.get(url, function (data) {
+    onUpdateUserPoints(data, matchid);
+  });
+};
+
+var onUpdateUserPoints = function (data, matchid) {
+  for (var i = 0, user; i < data.length; i++) {
+    user = data[i];
+
+    var $match = $('.match[data-id=' + matchid + ']');
+    var $user = $match.find('.scores li[data-id=' + user.user + ']');
+    var $points = $user.find('.user-points');
+    $points.text('(' + user.points + ')');
+  }
 };

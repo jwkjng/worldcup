@@ -109,6 +109,119 @@ app.post('/login', function *() {
   this.redirect('/cup');
 });
 
+var calculateUserPoints = function *(matchid) {
+  var matches = yield getData();
+
+  var filtered = [];
+  var users;
+  // match date is specified, so filter by date
+  if (!!matchid) {
+    for (var i = 0; i < matches.length; i++) {
+      var match = matches[i];
+      if (match.match_number == matchid) {
+        filtered.push(match);
+      }
+    }
+
+    matches = filtered;
+    users = yield scores.find({ matchid: matchid }).exec();
+  } else {
+    users = yield scores.find().exec();
+  }
+
+  var results = [];
+  for (var i = 0, user; i < users.length; i++) {
+    user = users[i];
+    var points = calculatePoints(matches, user);
+
+    results.push({
+      user: user.name,
+      points: points
+    });
+  }
+
+  return results;
+};
+
+var calculatePoints = function (matches, user) {
+  var filtered = matches.filter(function (m) {
+    return m.match_number == user.matchid;
+  });
+
+  if (filtered.length <= 0) return 0;
+
+  var match = filtered[0];
+  var points = 0;
+  var goalDiff = match.home_team.goals - match.away_team.goals;
+  var userGoalDiff = user.scoreA - user.scoreB;
+  var winner = getWinner(match.home_team.goals, match.away_team.goals);
+  var userWinner = getWinner(user.scoreA, user.scoreB);
+
+  if (match.home_team.goals == user.scoreA &&
+    match.away_team.goals == user.scoreB) {
+    // Exact match
+    points = 20;
+  } else if (winner == userWinner && goalDiff == userGoalDiff && winner != 0) {
+    // Winning Side + Goal Difference match
+    points = 8;
+  } else if (winner == userWinner && winner != 0 &&
+    (match.home_team.goals == user.scoreA ||
+    match.away_team.goals == user.scoreB)) {
+    // Winning Side + One-side score match
+    points = 5;
+  } else if (winner == userWinner) {
+    // Winning-side match
+    points = 2;
+  }
+
+  return points;
+};
+
+var getWinner = function (goalA, goalB) {
+  var winner;
+  var goalDiff = goalA - goalB;
+  if (goalDiff > 0) {
+    winner = 1;
+  } else if (goalDiff < 0) {
+    winner = -1;
+  } else {
+    winner = 0;
+  }
+  return winner;
+}
+
+var getAggregatePoints = function *() {
+  var result = yield calculateUserPoints();
+  var users = [];
+
+  for (var i = 0, user; i < result.length; i++) {
+    user = result[i];
+    var found = users.find(function (u) {
+      return u.user == user.user;
+    });
+
+    if (!!found) {
+      found.points += user.points;
+    } else {
+      users.push({
+        user: user.user,
+        points: user.points
+      });
+    }
+  }
+
+  users.sort(function (a, b) {
+    return b.points - a.points;
+  });
+
+  for (var i = 0, user; i < users.length; i++) {
+    user = users[i];
+    user.rank = i + 1;
+  }
+
+  return users;
+}
+
 app.get('/cup', function *(next) {
   if (!this.session.user) {
     this.redirect('/');
@@ -150,12 +263,15 @@ app.get('/cup', function *(next) {
     }
   }
 
+  var points = yield getAggregatePoints();
+
   context = {
     user: user,
     data: matches,
     matchDate: momentDate.format('MMMM DD YYYY'),
     prevDate: momentDate.subtract('days', 1).format('MMMM DD YYYY'),
-    nextDate: momentDate.add('days', 2).format('MMMM DD YYYY')
+    nextDate: momentDate.add('days', 2).format('MMMM DD YYYY'),
+    points: points
   };
   pageOptions = _.extend(context, {
     engine: 'handlebars'
@@ -206,12 +322,15 @@ app.get('/cup/:date', function *(next) {
     }
   }
 
+  var points = yield getAggregatePoints();
+
   context = {
     user: user,
     data: matches,
     matchDate: momentDate.format('MMMM DD YYYY'),
     prevDate: momentDate.subtract('days', 1).format('MMMM DD YYYY'),
-    nextDate: momentDate.add('days', 2).format('MMMM DD YYYY')
+    nextDate: momentDate.add('days', 2).format('MMMM DD YYYY'),
+    points: points
   };
   pageOptions = _.extend(context, {
     engine: 'handlebars'
@@ -292,10 +411,22 @@ app.get('/users/:matchid', function *(next) {
   yield next;
 });
 
+app.get('/points/:matchid', function *(next) {
+  var points = yield calculateUserPoints(this.params.matchid);
 
+  this.body = points;
+  yield next;
+});
+
+app.get('/points', function *(next) {
+  var points = yield calculateUserPoints();
+
+  this.body = points;
+  yield next;
+});
 
 if (!module.parent) {
-  httpServer = app.listen(3000);
+  httpServer = app.listen(80);
   io = require('socket.io')(httpServer);
   io.on('connection', function (socket) {
     socket.on('score:added', function (score) {

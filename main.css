@@ -111,6 +111,14 @@ a:hover {
 .match .scores .user-score {
   display: block;
   float: left;
+  margin-right: 1.5em;
+}
+
+.match .scores .user-points {
+  display: block;
+  float: left;
+  font-weight: bold;
+  color: green;
 }
 
 .match .actual-score {
@@ -127,11 +135,24 @@ a:hover {
   margin: 1.8em 0;
 }
 
-.point-system h4 {
+.point-system h4, .leaders h4 {
   border-bottom: solid 1px #1F4674;
 }
 .point-system ul {
   color: #6d6d6d;
+}
+.leaders ul li {
+  overflow: hidden;
+  border-bottom: 1px dashed #aaa;
+  margin-bottom: 0.5em;
+}
+.leaders ul li span {
+  float:left;
+  display: block;
+  margin-right: 1em;
+}
+.leaders .leader-name {
+  width: 150px;
 }
 .match .user-winner {
   font-weight: bold;

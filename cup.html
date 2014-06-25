@@ -60,12 +60,15 @@
         </ul>
       </div>
       <div class="leaders">
-        <span>Overall leaders coming soon</span>
+        <h4>Overall Leaders</h4>
         <ul>
+          {{#each points}}
           <li>
-            <span>name</span>
-            <span>90%</span>
+            <span>{{this.rank}}.</span>
+            <span class="leader-name">{{this.user}}</span>
+            <span class="leader-points">{{this.points}}</span>
           </li>
+          {{/each}}
         </ul>
       </div>
       <div class="point-system">
@@ -73,7 +76,7 @@
         <ul>
           <li>1. Exact score match: 20 points</li>
           <li>2. Winning side + goal difference match: 8 points</li>
-          <li>3. One-side score match: 5 points</li>
+          <li>3. Winning side + one-side score match: 5 points</li>
           <li>4. Winning side match: 2 points</li>
         </ul>
       </div>
